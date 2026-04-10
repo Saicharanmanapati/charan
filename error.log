@@ -1,0 +1,164 @@
+# ============================================================
+# Mock Questa/UVM Regression Log for Debug Practice
+# User exercise: Find the real errors/failures in this log
+# ============================================================
+
+# vlog compile started: Thu Apr 09 12:58:11 2026
+# Model Technology ModelSim/QuestaSim vlog 2022.4 Compiler 2022.10 Oct 22 2022
+# Start time: 12:58:11 on Apr 09,2026
+# vlog -work work +incdir+../tb +incdir+../env +incdir+../agent +incdir+../test ../rtl/ahb_apb_bridge.sv ../tb/interface.sv ../tb/ahb_xtn.sv ../tb/apb_xtn.sv ../env/bridge_scoreboard.sv ../env/bridge_env.sv ../test/test_pkg.sv ../tb/top.sv
+
+-- Compiling module ahb_apb_bridge
+-- Compiling interface bridge_if
+-- Compiling class ahb_xtn
+-- Compiling class apb_xtn
+-- Compiling class bridge_scoreboard
+** Warning: ../env/bridge_scoreboard.sv(37): (vlog-2240) Treating stand-alone use of function 'sample' as an implicit VOID cast.
+** Warning: ../env/bridge_scoreboard.sv(59): (vlog-2583) [TFMPC] - Too few port connections. Expected 2, found 1.
+-- Compiling class bridge_env
+** Error: ../env/bridge_env.sv(28): (vlog-13069) ../env/bridge_env.sv(28): near "sb": syntax error, unexpected IDENTIFIER, expecting ";"
+** Error: ../env/bridge_env.sv(42): Undefined variable: 'agt_top'
+-- Compiling package test_pkg
+** Warning: ../test/test_pkg.sv(14): (vlog-2275) Redefinition of macro: UVM_NO_DEPRECATED
+-- Compiling module top
+** Error: ../tb/top.sv(19): (vlog-13205) Could not find the package (test_pkg). Design read will continue, but expect a cascade of errors.
+** Error: ../tb/top.sv(19): (vlog-2730) Undefined variable: 'test_pkg'
+** Error: ../tb/top.sv(54): (vlog-13006) Could not find the package/class 'bridge_env'
+# End time: 12:58:12 on Apr 09,2026, Elapsed time: 0:00:01
+# Errors: 5, Warnings: 3
+
+# ------------------------------------------------------------
+# Re-run after fixing compile order
+# ------------------------------------------------------------
+# vlog -work work +incdir+../tb +incdir+../env +incdir+../agent +incdir+../test ../tb/ahb_xtn.sv ../tb/apb_xtn.sv ../env/env_config.sv ../agent/ahb_agent.sv ../agent/apb_agent.sv ../env/bridge_scoreboard.sv ../env/bridge_env.sv ../test/test_pkg.sv ../rtl/ahb_apb_bridge.sv ../tb/interface.sv ../tb/top.sv
+
+-- Compiling class ahb_xtn
+-- Compiling class apb_xtn
+-- Compiling class env_config
+-- Compiling class ahb_agent
+-- Compiling class apb_agent
+-- Compiling class bridge_scoreboard
+-- Compiling class bridge_env
+-- Compiling package test_pkg
+-- Compiling module ahb_apb_bridge
+-- Compiling interface bridge_if
+-- Compiling module top
+# End time: 12:59:03 on Apr 09,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0
+
+# ------------------------------------------------------------
+# Optimization
+# ------------------------------------------------------------
+# vopt top -o top_opt +acc
+** Warning: (vopt-10587) Some optimizations are turned off because +acc was specified.
+# Optimization completed successfully.
+
+# ------------------------------------------------------------
+# Simulation run
+# ------------------------------------------------------------
+# vsim -c top_opt +UVM_TESTNAME=sanity_test -do "run -all; quit"
+# Start time: 12:59:10 on Apr 09,2026
+# Loading sv_std.std
+# Loading work.top_opt
+# Loading work.ahb_apb_bridge
+# Loading work.bridge_if
+# Loading /opt/questa/uvm-1.1d/linux_x86_64/uvm_dpi.so
+# ** Note: (vsim-3812) Design is being optimized...
+UVM_INFO @ 0: reporter [RNTST] Running test sanity_test...
+UVM_INFO ../test/base_test.sv(21) @ 0: uvm_test_top [base_test] build_phase started
+UVM_INFO ../env/bridge_env.sv(33) @ 0: uvm_test_top.env [bridge_env] Creating AHB agent
+UVM_INFO ../env/bridge_env.sv(38) @ 0: uvm_test_top.env [bridge_env] Creating APB agent
+UVM_WARNING ../env/bridge_env.sv(52) @ 0: uvm_test_top.env [CFG] apb_cfg is null, using default configuration
+UVM_INFO ../env/bridge_env.sv(61) @ 0: uvm_test_top.env [bridge_env] build_phase completed
+UVM_INFO ../test/base_test.sv(31) @ 0: uvm_test_top [base_test] end_of_elaboration_phase
+UVM_INFO @ 0: reporter [CFGDB/SET] Configuration 'vif' (type virtual bridge_if) set by = (string uvm_test_top.*)
+UVM_INFO @ 0: reporter [CFGDB/GET] Configuration 'vif' (type virtual bridge_if) read by = /uvm_test_top/env/ahb_agt/drv = null (failed lookup)
+UVM_FATAL ../agent/ahb_driver.sv(24) @ 0: uvm_test_top.env.ahb_agt.drv [NO_VIF] virtual interface must be set for ahb_driver
+UVM_INFO ../tb/top.sv(77) @ 0: reporter [TOP] Starting clock generation
+UVM_INFO /opt/questa/uvm-1.1d/src/base/uvm_report_server.svh(904) @ 0: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO : 8
+UVM_WARNING : 1
+UVM_ERROR : 0
+UVM_FATAL : 1
+** Report counts by id
+[CFG] 1
+[CFGDB/GET] 1
+[CFGDB/SET] 1
+[NO_VIF] 1
+[RNTST] 1
+[TOP] 1
+
+# ** Note: $finish    : /opt/questa/uvm-1.1d/src/base/uvm_root.svh(483)
+#    Time: 0 ps  Iteration: 0  Instance: /uvm_pkg::uvm_root File: /opt/questa/uvm-1.1d/src/base/uvm_root.svh
+
+# ------------------------------------------------------------
+# Second run after vif fix
+# ------------------------------------------------------------
+# vsim -c top_opt +UVM_TESTNAME=sanity_test -sv_seed 24817 -do "run -all; quit"
+# Start time: 13:02:44 on Apr 09,2026
+UVM_INFO @ 0: reporter [RNTST] Running test sanity_test...
+UVM_INFO ../test/base_test.sv(21) @ 0: uvm_test_top [base_test] build_phase started
+UVM_INFO ../agent/ahb_driver.sv(29) @ 0: uvm_test_top.env.ahb_agt.drv [DRV] Got virtual interface
+UVM_INFO ../agent/apb_monitor.sv(17) @ 0: uvm_test_top.env.apb_agt.mon [MON] Monitor connected
+UVM_INFO ../env/bridge_scoreboard.sv(44) @ 0: uvm_test_top.env.sb [SB] Waiting for transactions...
+UVM_INFO ../seq/sanity_seq.sv(18) @ 10 ns: uvm_test_top.vseqr@@sanity_seq [SEQ] Starting 10 transfers
+UVM_INFO ../agent/ahb_driver.sv(58) @ 20 ns: uvm_test_top.env.ahb_agt.drv [DRV] Driving transfer addr=0x80000004 data=0x11223344 hsize=2
+UVM_INFO ../agent/ahb_monitor.sv(72) @ 20 ns: uvm_test_top.env.ahb_agt.mon [MON] Sampled transfer addr=0x80000004 data=0x11223344 hsize=2
+UVM_INFO ../agent/apb_driver.sv(48) @ 35 ns: uvm_test_top.env.apb_agt.drv [DRV] Driving APB write paddr=0x00000004 pwdata=0x11223344
+UVM_INFO ../agent/apb_monitor.sv(61) @ 45 ns: uvm_test_top.env.apb_agt.mon [MON] Sampled APB write paddr=0x00000004 pwdata=0x11223344
+UVM_INFO ../env/bridge_scoreboard.sv(81) @ 46 ns: uvm_test_top.env.sb [COMPARE_PASS] AHB and APB data matched
+UVM_INFO ../agent/ahb_driver.sv(58) @ 60 ns: uvm_test_top.env.ahb_agt.drv [DRV] Driving transfer addr=0x84000002 data=0xAABBCCDD hsize=1
+UVM_INFO ../agent/ahb_monitor.sv(72) @ 60 ns: uvm_test_top.env.ahb_agt.mon [MON] Sampled transfer addr=0x84000002 data=0xAABBCCDD hsize=1
+UVM_INFO ../agent/apb_driver.sv(48) @ 75 ns: uvm_test_top.env.apb_agt.drv [DRV] Driving APB write paddr=0x00000002 pwdata=0x0000CCDD
+UVM_INFO ../agent/apb_monitor.sv(61) @ 85 ns: uvm_test_top.env.apb_agt.mon [MON] Sampled APB write paddr=0x00000002 pwdata=0x0000CCDD
+UVM_ERROR ../env/bridge_scoreboard.sv(96) @ 86 ns: uvm_test_top.env.sb [COMPARE_FAIL] Data mismatch: AHB expected=0x0000AABB APB got=0x0000CCDD for hsize=1 haddr[1:0]=2'b10
+UVM_INFO ../agent/ahb_driver.sv(58) @ 100 ns: uvm_test_top.env.ahb_agt.drv [DRV] Driving transfer addr=0x88000001 data=0x55AA77EE hsize=0
+UVM_INFO ../agent/ahb_monitor.sv(72) @ 100 ns: uvm_test_top.env.ahb_agt.mon [MON] Sampled transfer addr=0x88000001 data=0x55AA77EE hsize=0
+UVM_INFO ../agent/apb_driver.sv(48) @ 115 ns: uvm_test_top.env.apb_agt.drv [DRV] Driving APB write paddr=0x00000001 pwdata=0x00000077
+UVM_INFO ../agent/apb_monitor.sv(61) @ 125 ns: uvm_test_top.env.apb_agt.mon [MON] Sampled APB write paddr=0x00000001 pwdata=0x00000077
+UVM_INFO ../env/bridge_scoreboard.sv(81) @ 126 ns: uvm_test_top.env.sb [COMPARE_PASS] AHB and APB data matched
+UVM_WARNING ../agent/ahb_monitor.sv(89) @ 140 ns: uvm_test_top.env.ahb_agt.mon [PROTO] HREADYOUT remained low for 17 cycles
+UVM_INFO ../seq/sanity_seq.sv(24) @ 180 ns: uvm_test_top.vseqr@@sanity_seq [SEQ] Sequence completed
+UVM_ERROR ../test/base_test.sv(58) @ 200 ns: uvm_test_top [TIMEOUT] Phase timeout reached before objection dropped
+# Break in Task uvm_pkg/uvm_phase::execute_phase at /opt/questa/uvm-1.1d/src/base/uvm_phase.svh line 1387
+
+# ------------------------------------------------------------
+# Stack trace
+# ------------------------------------------------------------
+#0  in function uvm_pkg::uvm_report_object::uvm_report_error at /opt/questa/uvm-1.1d/src/base/uvm_report_object.svh:174
+#1  in task /work.base_test::run_phase at ../test/base_test.sv:58
+#2  in task uvm_pkg::uvm_run_phase::exec_task at /opt/questa/uvm-1.1d/src/base/uvm_common_phases.svh:78
+#3  in task uvm_pkg::uvm_phase::execute_phase at /opt/questa/uvm-1.1d/src/base/uvm_phase.svh:1364
+
+UVM_INFO /opt/questa/uvm-1.1d/src/base/uvm_report_server.svh(904) @ 200 ns: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO : 20
+UVM_WARNING : 1
+UVM_ERROR : 2
+UVM_FATAL : 0
+
+** Report counts by id
+[COMPARE_FAIL] 1
+[COMPARE_PASS] 2
+[DRV] 6
+[MON] 6
+[PROTO] 1
+[RNTST] 1
+[SEQ] 2
+[SB] 1
+[TIMEOUT] 1
+
+# ------------------------------------------------------------
+# Coverage save
+# ------------------------------------------------------------
+# coverage save -onexit bridge_cov.ucdb
+** Warning: (vsim-6820) No matching regions found for requested code coverage types.
+** Error: (vcover-7) Failed to open UCDB file "bridge_cov.ucdb" for write
+
+# End time: 13:02:45 on Apr 09,2026, Elapsed time: 0:00:01
+# Errors: 3, Warnings: 2
